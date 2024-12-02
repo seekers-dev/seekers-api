@@ -43,7 +43,7 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<proto.version>4.28.2</proto.version>
-		<grpc.version>1.68.0</grpc.version>
+		<grpc.version>1.68.2</grpc.version>
 	</properties>
 	
 	<distributionManagement>
