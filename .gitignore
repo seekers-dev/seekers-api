@@ -1,0 +1,9 @@
+# Build folder
+build/
+
+# Nix result
+result
+
+# IDE files
+.idea/
+.vscode/

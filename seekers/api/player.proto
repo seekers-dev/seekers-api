@@ -1,0 +1,42 @@
+/*
+ * Copyright (C) 2024-2025  Seekers Contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+syntax = "proto3";
+
+option optimize_for = SPEED;
+
+// Represents a player in the game. Each player controls a number of
+// seekers and has an associated camp.
+message Player {
+  // The unique identifier of the player. The ID does not have a canonical
+  // format and is subject to change. Restarting the game will likely but
+  // is not required to change the ID. It is guaranteed that the ID will
+  // remain constant throughout a single game session.
+  string id = 1;
+
+  // The IDs of the seekers controlled by the player. Once a game has started,
+  // these IDs will not change.
+  repeated string seeker_ids = 2;
+
+  // The ID of the camp associated with the player. Once a game has started,
+  // this ID will not change.
+  string camp_id = 3;
+
+  // The score of the player. The score can only increase, every new
+  // message should have an equal or higher score than the previous one.
+  uint32 score = 4;
+}

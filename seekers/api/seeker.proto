@@ -1,0 +1,53 @@
+/*
+ * Copyright (C) 2024-2025  Seekers Contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+syntax = "proto3";
+
+import "seekers/api/physical.proto";
+import "seekers/api/vector2d.proto";
+
+option optimize_for = SPEED;
+
+// Represents a seeker in the game. Each seeker is controlled by a player,
+// and only the controlling player is allowed to modify its properties.
+message Seeker {
+  // The physical properties of the seeker. The ID does not have a canonical
+  // format and is subject to change. Restarting the game will likely but
+  // is not required to change the ID. It is guaranteed that the ID will
+  // remain constant throughout a single game session.
+  Physical physical = 1;
+
+  // The ID of the player controlling the seeker. Once a game has started,
+  // this ID will not change.
+  string player_id = 2;
+
+  // The magnet value of the seeker. If positive, the magnet is
+  // attractive, if negative, the magnet is repulsive. If this field
+  // is 0, it implies that the magnet is disabled. The magnet can be in
+  // the range from -8 to 1. If the value is outside the range, it will
+  // use the nearest value that is inside this range instead.
+  double magnet = 3;
+
+  // The target position of the seeker in 2D space. In other words,
+  // this is the destination of this seeker.
+  Vector2D target = 4;
+
+  // The disable counter of the seeker measured in the number of ticks.
+  // Indicates how many ticks must pass before the seeker is reactivated
+  // after being disabled.
+  uint64 disable_counter = 5;
+}

@@ -1,0 +1,41 @@
+/*
+ * Copyright (C) 2024-2025  Seekers Contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+syntax = "proto3";
+
+import "seekers/api/vector2d.proto";
+
+option optimize_for = SPEED;
+
+// Represents a physical object in the game, such as seekers or goals. All
+// physical objects have a position, velocity and acceleration.
+message Physical {
+  // The unique identifier of the object. The ID does not have a canonical
+  // format and is subject to change. Restarting the game will likely but
+  // is not required to change the ID. It is guaranteed that the ID will
+  // remain constant throughout a single game session.
+  string id = 1;
+
+  // The acceleration of the object.
+  Vector2D acceleration = 2;
+
+  // The position of the object.
+  Vector2D position = 3;
+
+  // The velocity of the object.
+  Vector2D velocity = 4;
+}

@@ -1,0 +1,115 @@
+/*
+ * Copyright (C) 2024-2025  Seekers Contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+syntax = "proto3";
+
+import "seekers/api/vector2d.proto";
+import "seekers/api/camp.proto";
+import "seekers/api/goal.proto";
+import "seekers/api/player.proto";
+import "seekers/api/seeker.proto";
+
+option optimize_for = SPEED;
+
+// Service for interacting with a Seekers game instance. Clients should
+// first send a join request before issuing commands.
+service Seekers {
+  // Allows a player to join the game and returns an authorization token.
+  rpc Join (JoinRequest) returns (JoinResponse);
+
+  // Sends commands to controlled units and returns the updated game state.
+  rpc Command (CommandRequest) returns (CommandResponse);
+}
+
+// Request sent by a client to join a game. Name and color are optional.
+message JoinRequest {
+  // The name of your team.
+  optional string name = 1;
+
+  // The preferred color of your team. If the color is already taken or
+  // very similar to another team's color, the server may assign a
+  // different color.
+  optional string color = 2;
+}
+
+// Response returned after a player joins a game. Contains all information
+// required for sending command requests.
+message JoinResponse {
+  // Represents a section of the configuration file. The join response may
+  // include extra sections or entries for experimental server features.
+  message Section {
+    // The name of the section. Each section must have a unique name.
+    string name = 1;
+
+    // Key-value pairs of entries within this section.
+    map<string, string> entries = 2;
+  }
+
+  // Token needed for authorizing command requests.
+  string token = 1;
+
+  // The ID assigned to the player upon joining. This ID does not change.
+  string player_id = 2;
+
+  // All sections of the configuration file. These will not change after
+  // the game has started.
+  repeated Section sections = 3;
+}
+
+// Request to command one or more seekers in the game.
+message CommandRequest {
+  // Commands for individual seekers. A command will only succeed if:
+  // 1. You are the controller of the seeker, and
+  // 2. The seeker ID exists.
+  message Command {
+    // ID of the seeker for which the command is intended.
+    string seeker_id = 1;
+
+    // The target position of the seeker.
+    Vector2D target = 2;
+
+    // The magnet value for the seeker. Zero disables the magnet, positive
+    // values attract goals, and negative values repel goals. Valid range
+    // is -8 to 1.
+    double magnet = 3;
+  }
+
+  // Token used for authorization.
+  string token = 1;
+
+  // List of commands to execute.
+  repeated Command commands = 2;
+}
+
+// Response returned after executing commands. Contains the current state
+// of the game.
+message CommandResponse {
+  // All players currently in the game.
+  repeated Player players = 1;
+
+  // All camps currently in the game.
+  repeated Camp camps = 2;
+
+  // All seekers currently in the game.
+  repeated Seeker seekers = 3;
+
+  // All goals currently in the game.
+  repeated Goal goals = 4;
+
+  // Number of ticks elapsed since the game started.
+  uint64 passed_playtime = 5;
+}

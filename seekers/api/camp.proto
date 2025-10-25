@@ -1,0 +1,44 @@
+/*
+ * Copyright (C) 2024-2025  Seekers Contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+syntax = "proto3";
+
+import "seekers/api/vector2d.proto";
+
+option optimize_for = SPEED;
+
+// Represents the camp of a player in the game. Each player has exactly
+// one camp, and each camp has exactly one owner.
+message Camp {
+  // The unique identifier of the camp. The ID does not have a canonical
+  // format and is subject to change. Restarting the game will likely but
+  // is not required to change the ID. It is guaranteed that the ID will
+  // remain constant throughout a single game session.
+  string id = 1;
+
+  // The ID of the player who owns the camp.
+  string player_id = 2;
+
+  // The position of the camp in 2D space.
+  Vector2D position = 3;
+
+  // The width of the camp.
+  double width = 4;
+
+  // The height of the camp.
+  double height = 5;
+}
